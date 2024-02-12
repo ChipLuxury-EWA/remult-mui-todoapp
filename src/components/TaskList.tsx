@@ -20,7 +20,12 @@ const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    taskRepo.find().then(setTasks);
+    taskRepo
+      .find({
+        orderBy: { createdAt: "asc" },
+        // where: { completed: true },
+      })
+      .then(setTasks);
   }, []);
 
   const tasksListItems = tasks.map((task) => {
@@ -36,9 +41,18 @@ const TaskList = () => {
       >
         <ListItemButton role={undefined} dense>
           <ListItemIcon>
-            <Checkbox edge="start" checked={task.completed} tabIndex={-1} disableRipple/>
+            <Checkbox
+              edge="start"
+              checked={task.completed}
+              tabIndex={-1}
+              disableRipple
+            />
           </ListItemIcon>
-          <ListItemText id={task.title} primary={task.title} primaryTypographyProps={{fontSize: '18px'}}/>
+          <ListItemText
+            id={task.title}
+            primary={task.title}
+            primaryTypographyProps={{ fontSize: "18px" }}
+          />
         </ListItemButton>
       </ListItem>
     );
