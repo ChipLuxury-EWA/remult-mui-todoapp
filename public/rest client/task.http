@@ -1,0 +1,12 @@
+GET http://localhost:3002/api/tasks HTTP/1.1
+
+###
+
+# @name add_task
+POST http://localhost:3002/api/tasks HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "build remult app"
+}
+###
