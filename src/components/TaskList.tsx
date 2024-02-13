@@ -1,18 +1,8 @@
 import { useEffect, useState } from "react";
 import { remult } from "remult";
 import { Task } from "../shared/Task";
-
-import {
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Checkbox,
-  IconButton,
-  Paper,
-} from "@mui/material";
-import { Delete } from "@mui/icons-material";
+import { List, Paper } from "@mui/material";
+import TaskListItem from "./TaskListItem";
 
 const taskRepo = remult.repo(Task);
 
@@ -28,34 +18,8 @@ const TaskList = () => {
       .then(setTasks);
   }, []);
 
-  const tasksListItems = tasks.map((task) => {
-    return (
-      <ListItem
-        key={task.id}
-        disablePadding
-        secondaryAction={
-          <IconButton edge="end">
-            <Delete />
-          </IconButton>
-        }
-      >
-        <ListItemButton role={undefined} dense>
-          <ListItemIcon>
-            <Checkbox
-              edge="start"
-              checked={task.completed}
-              tabIndex={-1}
-              disableRipple
-            />
-          </ListItemIcon>
-          <ListItemText
-            id={task.title}
-            primary={task.title}
-            primaryTypographyProps={{ fontSize: "18px" }}
-          />
-        </ListItemButton>
-      </ListItem>
-    );
+  const tasksListItems = tasks.map((task: Task) => {
+    return <TaskListItem key={task.id} task={task} tasks={tasks} setTasks={setTasks} />;
   });
 
   return (

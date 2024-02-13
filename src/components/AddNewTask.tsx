@@ -1,4 +1,4 @@
-import { Paper, TextField, IconButton, FormControl, Box } from "@mui/material";
+import { Paper, TextField, IconButton, Box } from "@mui/material";
 import { AddTask } from "@mui/icons-material";
 import { FormEvent, useState } from "react";
 import { Task } from "../shared/Task";
@@ -29,16 +29,15 @@ const AddNewTask = () => {
       >
         <TextField
           id="newTask"
-          // label="Add new task"
           variant="outlined"
           color="primary"
           placeholder="Add new Task..."
           value={taskTitle}
           onChange={(e) => setTaskTitle(e.target.value)}
-          InputProps={{ disableUnderline: true }}
           sx={{ "& fieldset": { border: "none" } }}
           margin="dense"
           fullWidth
+          autoFocus
         />
 
         <IconButton type="submit" size="medium" sx={{ mr: 0.5 }}>
