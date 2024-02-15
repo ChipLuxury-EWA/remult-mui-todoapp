@@ -1,51 +1,37 @@
-import {
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  TextField,
-  Checkbox,
-  IconButton,
-} from "@mui/material";
+import { ListItem, ListItemButton, ListItemIcon, TextField, Checkbox, IconButton } from "@mui/material";
 import { Delete, Save } from "@mui/icons-material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Task } from "../shared/Task";
 import { remult } from "remult";
+import { useSnackbar } from "notistack";
 
 const taskRepo = remult.repo(Task);
 
-const TaskListItem = ({
-  task,
-  tasks,
-  setTasks,
-}: {
-  task: Task;
-  tasks: Task[];
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
-}) => {
+const TaskListItem = ({ task }: { task: Task }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [isHover, setIsHover] = useState<boolean>(false);
+  const [taskTitle, setTaskTitle] = useState(task.title);
 
-  const setTask = (value: Task) =>
-    setTasks((tasks: Task[]) => tasks.map((t) => (t === task ? value : t)));
-
-  const setCompleted = async (completed: boolean) =>
-    setTask(await taskRepo.save({ ...task, completed }));
-
-  const setTitle = (title: string) => setTask({ ...task, title });
+  const setCompleted = async (completed: boolean) => await taskRepo.save({ ...task, completed });
 
   const saveTask = async () => {
+    // TODO tompo: add an onCHange saving method without the need of save button
     try {
-      setTask(await taskRepo.save(task));
+      await taskRepo.save({ ...task, title: taskTitle });
+      enqueueSnackbar(`Change: ${task.title} to ${taskTitle}`, { variant: "success" });
     } catch (error) {
-      console.error(error);
+      enqueueSnackbar((error as { message: string }).message, { variant: "error" });
     }
   };
 
   const deleteTask = async () => {
     try {
       await taskRepo.delete(task);
-      setTasks(tasks.filter((t) => t !== task));
+      enqueueSnackbar(`Deleted ${task.title}`, { variant: "success" });
     } catch (error) {
-      console.error(error as { message: string });
+      enqueueSnackbar((error as { message: string }).message, {
+        variant: "error",
+      });
     }
   };
 
@@ -79,8 +65,8 @@ const TaskListItem = ({
           />
         </ListItemIcon>
         <TextField
-          value={task.title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={taskTitle}
+          onChange={(e) => setTaskTitle(e.target.value)}
           InputProps={{ style: { fontSize: 22 } }}
           sx={{ "& fieldset": { border: "none" } }}
           margin="none"
