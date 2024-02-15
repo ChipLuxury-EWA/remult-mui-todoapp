@@ -3,20 +3,22 @@ import { AddTask } from "@mui/icons-material";
 import { FormEvent, useState } from "react";
 import { Task } from "../shared/Task";
 import { remult } from "remult";
+import { useSnackbar } from "notistack";
 
 const taskRepo = remult.repo(Task);
 
 const AddNewTask = () => {
   const [taskTitle, setTaskTitle] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
   const addNewTask = async (e: FormEvent) => {
     e.preventDefault();
     try {
       const newTask = await taskRepo.insert({ title: taskTitle });
-      console.log(newTask);
       setTaskTitle("");
+      enqueueSnackbar(`Add: ${newTask.title}`, { variant: "success" });
     } catch (error) {
-      alert((error as { message: string }).message);
+      enqueueSnackbar((error as { message: string }).message, { variant: "error" });
     }
   };
 
