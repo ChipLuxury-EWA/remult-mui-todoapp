@@ -1,33 +1,48 @@
 import { useEffect, useState } from "react";
 import { remult } from "remult";
-import { Task } from "../shared/Task";
-import { List, Paper } from "@mui/material";
+import { Task } from "../shared/entities/Task";
+import { List, Paper, IconButton, ListItemButton } from "@mui/material";
+import { FactCheck, PlaylistRemove } from "@mui/icons-material";
+
 import TaskListItem from "./TaskListItem";
+import { TaskController } from "../shared/controllers/Tasks.controller";
 
 const taskRepo = remult.repo(Task);
 
 const TaskList = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<Task[]>([]);
 
-  useEffect(() => {
-    return taskRepo
-      .liveQuery({
-      limit: 20,
-      orderBy: { createdAt: "asc" },
-      // where: { completed: true },
-      })
-      .subscribe((info) => setTasks(info.applyChanges));
-  }, []);
+    useEffect(() => {
+        return taskRepo
+            .liveQuery({
+                limit: 20,
+                orderBy: { createdAt: "asc" },
+                // where: { completed: true },
+            })
+            .subscribe((info) => setTasks(info.applyChanges));
+    }, []);
 
-  const tasksListItems = tasks.map((task: Task) => {
-    return <TaskListItem key={task.id} task={task} />;
-  });
+    const tasksListItems = tasks.map((task: Task) => {
+        return <TaskListItem key={task.id} task={task} />;
+    });
 
-  return (
-    <List sx={{ width: "100%", maxWidth: 360 }}>
-      <Paper>{tasksListItems}</Paper>
-    </List>
-  );
+    const setAllCompleted = async (completed: boolean) => {
+        await TaskController.setAllTasksCompleted(completed);
+    };
+
+    return (
+        <List sx={{ width: "100%", maxWidth: 360 }}>
+            <Paper>{tasksListItems}</Paper>
+            <ListItemButton>
+                <IconButton onClick={() => setAllCompleted(true)} edge="start">
+                    <FactCheck />
+                </IconButton>
+                <IconButton onClick={() => setAllCompleted(false)}>
+                    <PlaylistRemove />
+                </IconButton>
+            </ListItemButton>
+        </List>
+    );
 };
 
 export default TaskList;

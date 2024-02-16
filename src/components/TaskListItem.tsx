@@ -1,12 +1,12 @@
 import { ListItem, ListItemButton, ListItemIcon, TextField, Checkbox, IconButton } from "@mui/material";
 import { Delete, Save } from "@mui/icons-material";
 import { useState } from "react";
-import { Task } from "../shared/Task";
+import { Task } from "../shared/entities/Task";
 import { remult } from "remult";
 import { useSnackbar } from "notistack";
 
 const taskRepo = remult.repo(Task);
-
+ 
 const TaskListItem = ({ task }: { task: Task }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [isHover, setIsHover] = useState<boolean>(false);
@@ -37,7 +37,7 @@ const TaskListItem = ({ task }: { task: Task }) => {
 
   return (
     <ListItem
-      onMouseEnter={() => setIsHover(true)}
+      onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       key={task.id}
       disablePadding

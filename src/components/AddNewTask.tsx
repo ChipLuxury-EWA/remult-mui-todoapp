@@ -1,7 +1,7 @@
 import { Paper, TextField, IconButton, Box } from "@mui/material";
 import { AddTask } from "@mui/icons-material";
 import { FormEvent, useState } from "react";
-import { Task } from "../shared/Task";
+import { Task } from "../shared/entities/Task";
 import { remult } from "remult";
 import { useSnackbar } from "notistack";
 
