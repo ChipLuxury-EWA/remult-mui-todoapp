@@ -2,7 +2,7 @@ import express, { Router } from "express";
 import type { UserInfo } from "remult";
 
 const validUser: UserInfo[] = [
-    { id: "1", name: "admin" },
+    { id: "1", name: "admin", roles:["admin"] },
     { id: "2", name: "user" },
 ];
 
