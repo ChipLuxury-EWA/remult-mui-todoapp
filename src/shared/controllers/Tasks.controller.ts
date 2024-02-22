@@ -1,8 +1,8 @@
-import { BackendMethod, remult } from "remult";
+import { BackendMethod, remult, Allow } from "remult";
 import { Task } from "../entities/Task";
 
 export class TaskController {
-    @BackendMethod({ allowed: true })
+    @BackendMethod({ allowed: Allow.authenticated })
     //write as a regular function, not anonyms fat arrow 
     static async setAllTasksCompleted(completed: boolean) {
         console.log("first");
