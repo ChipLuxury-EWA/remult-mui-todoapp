@@ -16,7 +16,7 @@ auth.post("/api/signIn", (req, res) => {
         req.session!["user"] = user;
         res.json(user);
     } else {
-        res.status(404).json(`Invalid userName try ${validUser.map((u) => u.name).join(" ")}`);
+        res.status(404).json(`Invalid userName try ${validUser.map((u) => u.name).join(" or ")}`);
     }
 });
 

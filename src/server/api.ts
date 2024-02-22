@@ -5,4 +5,5 @@ import { TaskController } from "../shared/controllers/Tasks.controller";
 export const api = remultExpress({
     entities: [Task],
     controllers: [TaskController],
+    getUser: (req) => req.session!["user"],
 });

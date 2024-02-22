@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { remult } from "remult";
 import { Task } from "../shared/entities/Task";
 import { List, Paper, IconButton, ListItemButton } from "@mui/material";
-import { FactCheck, PlaylistRemove } from "@mui/icons-material";
+import { FactCheck, PlaylistRemove, Logout } from "@mui/icons-material";
 
 import TaskListItem from "./TaskListItem";
 import { TaskController } from "../shared/controllers/Tasks.controller";
 
 const taskRepo = remult.repo(Task);
 
-const TaskList = () => {
+const TaskList = ({ signOut }: { signOut: () => void }) => {
     const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
@@ -39,6 +39,9 @@ const TaskList = () => {
                 </IconButton>
                 <IconButton onClick={() => setAllCompleted(false)}>
                     <PlaylistRemove />
+                </IconButton>
+                <IconButton onClick={() => signOut()}>
+                    <Logout />
                 </IconButton>
             </ListItemButton>
         </List>
