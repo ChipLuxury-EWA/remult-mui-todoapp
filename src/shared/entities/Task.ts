@@ -6,13 +6,13 @@ import { Entity, Fields, Allow } from "remult";
     allowApiDelete: "admin",
 })
 export class Task {
-    @Fields.cuid()
+    @Fields.string({ dbName: "_id", valueConverter: { fieldTypeInDb: "dbid" } })
     id = "";
     @Fields.string({
         validate: (task) => {
             if (task.title.length < 3) throw "Title to short";
         },
-        allowApiUpdate: "admin"
+        allowApiUpdate: "admin",
     })
     title = "";
     @Fields.boolean()
