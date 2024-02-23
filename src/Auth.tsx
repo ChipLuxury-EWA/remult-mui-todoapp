@@ -1,4 +1,4 @@
-import { FormEvent, useState, useEffect } from "react";
+import { FormEvent, useState } from "react";
 import { remult } from "remult";
 import { useSnackbar } from "notistack";
 
