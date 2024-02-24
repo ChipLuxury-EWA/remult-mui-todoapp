@@ -15,7 +15,7 @@ const TaskListItem = ({ task }: { task: Task }) => {
     const setCompleted = async (completed: boolean) => await taskRepo.save({ ...task, completed });
 
     const saveTask = async () => {
-        // TODO tompo: add an onCHange saving method without the need of save button
+        if (task.title === taskTitle) return;
         try {
             await taskRepo.save({ ...task, title: taskTitle });
             enqueueSnackbar(`Change: ${task.title} to ${taskTitle}`, { variant: "success" });
@@ -44,9 +44,6 @@ const TaskListItem = ({ task }: { task: Task }) => {
             secondaryAction={
                 isHover && (
                     <>
-                        <IconButton edge="end" onClick={saveTask}>
-                            <Save />
-                        </IconButton>
                         {taskRepo.metadata.apiDeleteAllowed() && (
                             <IconButton edge="end" onClick={deleteTask}>
                                 <Delete />
@@ -69,6 +66,12 @@ const TaskListItem = ({ task }: { task: Task }) => {
                 <TextField
                     value={taskTitle}
                     onChange={(e) => setTaskTitle(e.target.value)}
+                    onBlur={() => saveTask()}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            saveTask();
+                        }
+                    }}
                     InputProps={{ style: { fontSize: 22 } }}
                     sx={{ "& fieldset": { border: "none" } }}
                     margin="none"
