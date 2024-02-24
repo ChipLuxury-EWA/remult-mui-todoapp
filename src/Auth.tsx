@@ -1,32 +1,37 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { remult } from "remult";
 import { useSnackbar } from "notistack";
+import { CircularProgress } from "@mui/material";
 
 import App from "./App";
 import SignIn from "./components/SignIn";
+import { useSignInMutation } from "./redux/auth.api";
 
 const Auth = () => {
     const { enqueueSnackbar } = useSnackbar();
+    const [authUser, { data, error, isLoading, isError, isSuccess }] = useSignInMutation();
 
     const [userName, setUserName] = useState("");
     const [isSignedIn, setIsSignedIn] = useState(false);
 
-    const signIn: (e: FormEvent) => void = async (e: FormEvent) => {
-        e.preventDefault();
-        const result = await fetch("/api/signIn", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userName }),
-        });
+    useEffect(() => {
+        if (isError && "data" in error!) {
+            enqueueSnackbar(error!.data as string, { variant: "error" });
+        }
+    }, [isError, error, enqueueSnackbar]);
 
-        if (result.ok) {
-            remult.user = await result.json();
+    useEffect(() => {
+        if (isSuccess) {
+            remult.user = data;
             setIsSignedIn(true);
             setUserName("");
             enqueueSnackbar(`Hello ${remult.user!.name}`, { variant: "success" });
-        } else {
-            enqueueSnackbar(await result.json(), { variant: "error" });
         }
+    }, [isSuccess, data, enqueueSnackbar]);
+
+    const signIn: (e: FormEvent) => void = async (e: FormEvent) => {
+        e.preventDefault();
+        await authUser({ userName });
     };
 
     const signOut: () => void = async () => {
@@ -36,7 +41,10 @@ const Auth = () => {
         remult.user = undefined;
         setIsSignedIn(false);
     };
-    if (isSignedIn) {
+
+    if (isLoading) {
+        return <CircularProgress />
+    } else if (isSignedIn && isSuccess) {
         return <App signOut={signOut} />;
     } else {
         return <SignIn userName={userName} setUserName={setUserName} signIn={signIn} />;
