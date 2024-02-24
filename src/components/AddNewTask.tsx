@@ -23,7 +23,7 @@ const AddNewTask = () => {
   };
 
   return (
-    <Paper sx={{ maxWidth: 360 }} elevation={5}>
+    <Paper elevation={5}>
       <Box
         component="form"
         onSubmit={addNewTask}

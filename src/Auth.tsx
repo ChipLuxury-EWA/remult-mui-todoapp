@@ -7,7 +7,7 @@ import App from "./App";
 import SignIn from "./components/SignIn";
 import { useSignInMutation, useSignOutMutation } from "./redux/auth.api";
 
-const Auth = () => {
+const Auth = ({ maxWidth }: { maxWidth: number }) => {
     const { enqueueSnackbar } = useSnackbar();
     const [authUser, { data, error, isLoading, isError, isSuccess }] = useSignInMutation();
     const [signOutUser, { isLoading: isSignOutLoading, isSuccess: isSignedOutSuccess }] = useSignOutMutation();
@@ -44,10 +44,14 @@ const Auth = () => {
     if (isLoading || isSignOutLoading) {
         return <CircularProgress />;
     } else if (isSignedIn && isSuccess) {
-        return <App signOut={signOut} />;
+        return <App signOut={signOut} maxWidth={maxWidth} />;
     } else if (!isSignedIn || isSignedOutSuccess) {
-        return <SignIn userName={userName} setUserName={setUserName} signIn={signIn} />;
+        return <SignIn userName={userName} setUserName={setUserName} signIn={signIn} maxWidth={maxWidth} />;
     }
 };
 
 export default Auth;
+
+Auth.defaultProps = {
+    maxWidth: 400,
+};

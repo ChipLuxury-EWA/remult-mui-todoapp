@@ -31,7 +31,7 @@ const TaskList = ({ signOut }: { signOut: () => void }) => {
     };
 
     return (
-        <List sx={{ width: "100%", maxWidth: 360 }}>
+        <List>
             <Paper>{tasksListItems}</Paper>
             <ListItemButton>
                 <IconButton onClick={() => setAllCompleted(true)} edge="start">

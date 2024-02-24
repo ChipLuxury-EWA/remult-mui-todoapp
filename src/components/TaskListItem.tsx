@@ -12,6 +12,7 @@ const TaskListItem = ({ task }: { task: Task }) => {
     const [isHover, setIsHover] = useState<boolean>(false);
     const [taskTitle, setTaskTitle] = useState(task.title);
 
+    // TODO tompo add loading state to setCompleted
     const setCompleted = async (completed: boolean) => await taskRepo.save({ ...task, completed });
 
     const saveTask = async () => {
