@@ -10,14 +10,13 @@ const authApi = baseApi.injectEndpoints({
                 body: data,
             }),
         }),
-        signOut: build.query({
+        signOut: build.mutation({
             query: () => ({
                 url: SIGN_OUT,
-                method: "GET",
+                method: "POST",
             }),
-            keepUnusedDataFor: 60,
         }),
     }),
 });
 
-export const { useSignInMutation, useSignOutQuery } = authApi;
+export const { useSignInMutation, useSignOutMutation } = authApi;

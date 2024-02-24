@@ -5,11 +5,12 @@ import { CircularProgress } from "@mui/material";
 
 import App from "./App";
 import SignIn from "./components/SignIn";
-import { useSignInMutation } from "./redux/auth.api";
+import { useSignInMutation, useSignOutMutation } from "./redux/auth.api";
 
 const Auth = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [authUser, { data, error, isLoading, isError, isSuccess }] = useSignInMutation();
+    const [signOutUser, { isLoading: isSignOutLoading, isSuccess: isSignedOutSuccess }] = useSignOutMutation();
 
     const [userName, setUserName] = useState("");
     const [isSignedIn, setIsSignedIn] = useState(false);
@@ -35,18 +36,16 @@ const Auth = () => {
     };
 
     const signOut: () => void = async () => {
-        await fetch("/api/signOut", {
-            method: "POST",
-        });
+        await signOutUser({});
         remult.user = undefined;
         setIsSignedIn(false);
     };
 
-    if (isLoading) {
-        return <CircularProgress />
+    if (isLoading || isSignOutLoading) {
+        return <CircularProgress />;
     } else if (isSignedIn && isSuccess) {
         return <App signOut={signOut} />;
-    } else {
+    } else if (!isSignedIn || isSignedOutSuccess) {
         return <SignIn userName={userName} setUserName={setUserName} signIn={signIn} />;
     }
 };
