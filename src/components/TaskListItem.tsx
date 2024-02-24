@@ -1,5 +1,5 @@
 import { ListItem, ListItemButton, ListItemIcon, TextField, Checkbox, IconButton } from "@mui/material";
-import { Delete, Save } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import { useState } from "react";
 import { Task } from "../shared/entities/Task";
 import { remult } from "remult";
