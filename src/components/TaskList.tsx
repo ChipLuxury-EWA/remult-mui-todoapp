@@ -1,26 +1,13 @@
-import { useEffect, useState } from "react";
-import { remult } from "remult";
 import { Task } from "../shared/entities/Task";
-import { List, Paper, IconButton, ListItemButton } from "@mui/material";
+import { List, Paper, IconButton, ListItemButton, LinearProgress } from "@mui/material";
 import { FactCheck, PlaylistRemove, Logout } from "@mui/icons-material";
 
 import TaskListItem from "./TaskListItem";
 import { TaskController } from "../shared/controllers/Tasks.controller";
-
-const taskRepo = remult.repo(Task);
+import useTaskQueryHook from "../redux/hooks/useTaskQueryHook";
 
 const TaskList = ({ signOut }: { signOut: () => void }) => {
-    const [tasks, setTasks] = useState<Task[]>([]);
-
-    useEffect(() => {
-        return taskRepo
-            .liveQuery({
-                limit: 20,
-                orderBy: { createdAt: "asc" },
-                // where: { completed: true },
-            })
-            .subscribe((info) => setTasks(info.applyChanges));
-    }, []);
+    const { tasks, isLoading } = useTaskQueryHook();
 
     const tasksListItems = tasks.map((task: Task) => {
         return <TaskListItem key={task.id} task={task} />;
@@ -29,6 +16,8 @@ const TaskList = ({ signOut }: { signOut: () => void }) => {
     const setAllCompleted = async (completed: boolean) => {
         await TaskController.setAllTasksCompleted(completed);
     };
+
+    if (isLoading) return <LinearProgress />;
 
     return (
         <List>
