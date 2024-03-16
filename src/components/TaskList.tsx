@@ -1,21 +1,22 @@
+import { useEffect, useState } from "react";
 import { Task } from "../shared/entities/Task";
-import { List, Paper, IconButton, ListItemButton, LinearProgress } from "@mui/material";
+import { List, Paper, IconButton, ListItemButton, LinearProgress, CircularProgress } from "@mui/material";
 import { FactCheck, PlaylistRemove, Logout } from "@mui/icons-material";
 
 import TaskListItem from "./TaskListItem";
-import { TaskController } from "../shared/controllers/Tasks.controller";
 import useTaskQueryHook from "../redux/hooks/useTaskQueryHook";
 
 const TaskList = ({ signOut }: { signOut: () => void }) => {
-    const { tasks, isLoading } = useTaskQueryHook();
+    const { tasks, isLoading, setAllCompleted, isSettingAllTask } = useTaskQueryHook();
+    const [tasksList, setTasksList] = useState(tasks); // re render the comp when tasks is
 
-    const tasksListItems = tasks.map((task: Task) => {
+    useEffect(() => {
+        setTasksList(tasks);
+    }, [tasks, isLoading]);
+
+    const tasksListItems = tasksList.map((task: Task) => {
         return <TaskListItem key={task.id} task={task} />;
     });
-
-    const setAllCompleted = async (completed: boolean) => {
-        await TaskController.setAllTasksCompleted(completed);
-    };
 
     if (isLoading) return <LinearProgress />;
 
@@ -32,6 +33,7 @@ const TaskList = ({ signOut }: { signOut: () => void }) => {
                 <IconButton onClick={() => signOut()}>
                     <Logout />
                 </IconButton>
+                {isSettingAllTask && <CircularProgress />}
             </ListItemButton>
         </List>
     );

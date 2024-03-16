@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDeleteTaskMutation, useAddTaskMutation } from "../task.api";
+import { useDeleteTaskMutation, useAddTaskMutation, useUpdateTaskMutation, useSetAllCompletedMutation } from "../task.api";
 import { Task } from "../../shared/entities/Task";
 import { remult } from "remult";
 const taskRepo = remult.repo(Task);
@@ -10,7 +10,7 @@ const useTaskQueryHook = () => {
     useEffect(() => {
         return taskRepo
             .liveQuery({
-                limit: 20,
+                limit: 30,
                 orderBy: { createdAt: "asc" },
                 // where: { completed: true },
             })
@@ -39,7 +39,29 @@ const useTaskQueryHook = () => {
         },
     ] = useDeleteTaskMutation();
 
-    const isLoading = isDeletingTask || isAddingTask || tasks.length === 0;
+    const [
+        updateTask,
+        {
+            data: updateTaskAns,
+            error: updateTaskError,
+            isLoading: isUpdatingTask,
+            isError: isErrorUpdatingTask,
+            isSuccess: isUpdatedTaskSuccessfully,
+        },
+    ] = useUpdateTaskMutation();
+
+    const [
+        setAllCompleted,
+        {
+            data: setAllTaskAns,
+            error: setAllTaskError,
+            isLoading: isSettingAllTask,
+            isError: isErrorSetAllTask,
+            isSuccess: isSetAllSuccessfully,
+        },
+    ] = useSetAllCompletedMutation();
+
+    const isLoading = isDeletingTask || isAddingTask || isUpdatingTask || tasks.length === 0;
 
     return {
         tasks,
@@ -56,6 +78,18 @@ const useTaskQueryHook = () => {
         isAddingTask,
         isAddingTaskError,
         isAddedTaskSuccess,
+        updateTask,
+        updateTaskAns,
+        updateTaskError,
+        isUpdatingTask,
+        isErrorUpdatingTask,
+        isUpdatedTaskSuccessfully,
+        setAllCompleted,
+        setAllTaskAns,
+        setAllTaskError,
+        isSettingAllTask,
+        isErrorSetAllTask,
+        isSetAllSuccessfully,
     };
 };
 

@@ -12,24 +12,42 @@ const TaskListItem = ({ task }: { task: Task }) => {
     const { enqueueSnackbar } = useSnackbar();
     const [isHover, setIsHover] = useState<boolean>(false);
     const [taskTitle, setTaskTitle] = useState(task.title);
-    const { deleteTask, isLoading, isDeletedSuccessfully, isErrorDeletingTask, deleteTaskError } = useTaskQueryHook();
+
+    useEffect(() => {
+        //update task with remult live query
+        setTaskTitle(task.title);
+    }, [task]);
+
+    const {
+        deleteTask,
+        isLoading,
+        isDeletedSuccessfully,
+        isErrorDeletingTask,
+        deleteTaskError,
+        updateTask,
+        updateTaskAns,
+        updateTaskError,
+        isErrorUpdatingTask,
+        isUpdatedTaskSuccessfully,
+    } = useTaskQueryHook();
 
     useEffect(() => {
         isDeletedSuccessfully && enqueueSnackbar(`Deleted ${task.title}`, { variant: "success" });
         isErrorDeletingTask && enqueueSnackbar((deleteTaskError as { message: string }).message, { variant: "error" });
     }, [isDeletedSuccessfully, isErrorDeletingTask, deleteTaskError, enqueueSnackbar, task]);
 
-    // TODO tompo add loading state to setCompleted
-    const setCompleted = async (completed: boolean) => await taskRepo.save({ ...task, completed });
+    useEffect(() => {
+        isUpdatedTaskSuccessfully && enqueueSnackbar(`Saved ${updateTaskAns?.title}`, { variant: "success" });
+        isErrorUpdatingTask && enqueueSnackbar((updateTaskError as { message: string }).message, { variant: "error" });
+    }, [isUpdatedTaskSuccessfully, isErrorUpdatingTask, updateTaskError, updateTaskAns, enqueueSnackbar]);
 
-    const saveTask = async () => {
+    const setCompleted = (completed: boolean) => updateTask({ ...task, completed });
+
+    const saveTask = () => {
         if (task.title === taskTitle) return;
-        try {
-            await taskRepo.save({ ...task, title: taskTitle });
-        } catch (error) {
-            enqueueSnackbar((error as { message: string }).message, { variant: "error" });
-        }
+        updateTask({ ...task, title: taskTitle });
     };
+
     return (
         <ListItem
             onMouseOver={() => setIsHover(true)}
