@@ -30,7 +30,7 @@ const taskApi = baseApi.injectEndpoints({
             invalidatesTags: ["Task"],
         }),
         deleteTask: build.mutation({
-            queryFn: async (task: any) => {
+            queryFn: async (task: Task) => {
                 try {
                     const data = taskRepo.toJson(await taskRepo.delete(task));
                     return { data };
@@ -41,7 +41,7 @@ const taskApi = baseApi.injectEndpoints({
             invalidatesTags: ["Task"],
         }),
         updateTask: build.mutation({
-            queryFn: async (task: any) => {
+            queryFn: async (task: Task) => {
                 try {
                     const data = taskRepo.toJson(await taskRepo.save(task));
                     return { data };
@@ -54,7 +54,7 @@ const taskApi = baseApi.injectEndpoints({
         setAllCompleted: build.mutation({
             queryFn: async (completed: boolean) => {
                 try {
-                    const data = taskRepo.toJson(await TaskController.setAllTasksCompleted(completed));
+                    const data = taskRepo.toJson(await TaskController.setAllTasksCopleted(completed));
                     return { data };
                 } catch (error) {
                     return { error };
