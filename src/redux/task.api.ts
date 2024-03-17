@@ -54,7 +54,7 @@ const taskApi = baseApi.injectEndpoints({
         setAllCompleted: build.mutation({
             queryFn: async (completed: boolean) => {
                 try {
-                    const data = taskRepo.toJson(await TaskController.setAllTasksCopleted(completed));
+                    const data = taskRepo.toJson(await TaskController.setAllTasksCompleted(completed));
                     return { data };
                 } catch (error) {
                     return { error };
