@@ -1,34 +1,24 @@
 import { useEffect, useState } from "react";
-import { remult } from "remult";
 import { Task } from "../shared/entities/Task";
-import { List, Paper, IconButton, ListItemButton } from "@mui/material";
+import { List, Paper, IconButton, ListItemButton, LinearProgress, CircularProgress } from "@mui/material";
 import { FactCheck, PlaylistRemove, Logout } from "@mui/icons-material";
 
 import TaskListItem from "./TaskListItem";
-import { TaskController } from "../shared/controllers/Tasks.controller";
-
-const taskRepo = remult.repo(Task);
+import useTaskQueryHook from "../redux/hooks/useTaskQueryHook";
 
 const TaskList = ({ signOut }: { signOut: () => void }) => {
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const { tasks, isLoading, setAllCompleted, isSettingAllTask } = useTaskQueryHook();
+    const [tasksList, setTasksList] = useState(tasks); // re render the comp when tasks is
 
     useEffect(() => {
-        return taskRepo
-            .liveQuery({
-                limit: 20,
-                orderBy: { createdAt: "asc" },
-                // where: { completed: true },
-            })
-            .subscribe((info) => setTasks(info.applyChanges));
-    }, []);
+        setTasksList(tasks);
+    }, [tasks, isLoading]);
 
-    const tasksListItems = tasks.map((task: Task) => {
+    const tasksListItems = tasksList.map((task: Task) => {
         return <TaskListItem key={task.id} task={task} />;
     });
 
-    const setAllCompleted = async (completed: boolean) => {
-        await TaskController.setAllTasksCompleted(completed);
-    };
+    if (isLoading) return <LinearProgress />;
 
     return (
         <List>
@@ -43,6 +33,7 @@ const TaskList = ({ signOut }: { signOut: () => void }) => {
                 <IconButton onClick={() => signOut()}>
                     <Logout />
                 </IconButton>
+                {isSettingAllTask && <CircularProgress />}
             </ListItemButton>
         </List>
     );
