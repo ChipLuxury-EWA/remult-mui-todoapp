@@ -8,5 +8,20 @@ you can experience it https://remult-mui-todoapp.onrender.com/
 In this project I learned remult and sharpen my skilles in mui.
 Remult is a fullstack framework that take care of a lot boilerplate code regerding the Entities managment (CRUD stuff)
 
+#### Featurs:
+- User authentication
+- Role authorization
+- Live queris
+  - Add Task (admin only)
+  - Update task title
+  - Check task
+  - Delete Task
 
-I did not implemented loading state nor optimistic approach when the user or admin manipulating tasks
+#### Tech Stack
+- TS
+- React
+- **REMULT**
+- MongoDB
+- Redux + RTK QUERY
+- MUI
+- Notistack (toast)
