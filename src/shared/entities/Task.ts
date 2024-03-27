@@ -6,7 +6,8 @@ import { Entity, Fields, Allow } from "remult";
     allowApiDelete: "admin",
 })
 export class Task {
-    @Fields.string({ dbName: "_id", valueConverter: { fieldTypeInDb: "dbid" } })
+    //    @Fields.string({ dbName: "_id", valueConverter: { fieldTypeInDb: "dbid" } })
+    @Fields.cuid()
     id = "";
     @Fields.string({
         validate: (task) => {
