@@ -28,10 +28,10 @@ const useTaskQueryHook = () => {
     // error: allTasksError,
     // isLoading: allTasksLoading,
     // isError: foo1,
-    // isSuccess: foo2,
+    isSuccess: isAllTasksSuccess,
   } = useGetTasksQuery({});
 
-  console.log(allTasks)
+  isAllTasksSuccess && console.log(allTasks);
 
   const [
     addTask,
