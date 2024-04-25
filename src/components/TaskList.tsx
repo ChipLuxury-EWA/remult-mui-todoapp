@@ -15,7 +15,7 @@ const TaskList = ({ signOut }: { signOut: () => void }) => {
     }, [tasks, isLoading]);
 
     const tasksListItems = tasksList.map((task: Task) => {
-        return <TaskListItem key={task.id} task={task} />;
+        return <TaskListItem key={task.id + task.title} task={task} />;
     });
 
     if (isLoading) return <LinearProgress />;
